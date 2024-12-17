@@ -25,3 +25,7 @@ jobs:
         if: ${{steps.release.outputs.releases_created}}
         run: |
           echo "Next version: ${{ steps.release.outputs.major}}.${{ steps.release.outputs.minor}}.${{ steps.release.outputs.patch}}"
+      - name: Print JSON Payload
+        if: ${{steps.release.outputs.releases_created}}
+        run: |
+          echo "Pull request details: ${{ steps.release.outputs.pr}}"
