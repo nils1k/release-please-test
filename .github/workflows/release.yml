@@ -28,4 +28,4 @@ jobs:
       - name: Print JSON Payload
         if: ${{steps.release.outputs.releases_created}}
         run: |
-          echo "Pull request details: ${{ steps.release.outputs.pr}}"
+          echo "Pull request details: ${{ steps.release.outputs}}"
