@@ -35,3 +35,5 @@ jobs:
         id: version
         with:
           cmd: "echo '${{ steps.release.outputs.pr }}' | jq .title -r"
+      - name: Show my version
+        run: 'echo "version is ${{ steps.version.outputs.value }}"'
