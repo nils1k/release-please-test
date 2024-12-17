@@ -26,6 +26,7 @@ jobs:
         run: |
           echo "Next version: ${{ steps.release.outputs.major}}.${{ steps.release.outputs.minor}}.${{ steps.release.outputs.patch}}"
       - name: Print JSON Payload
+        continue-on-error: true
         if: ${{steps.release.outputs.releases_created}}
         run: |
-          echo "Pull request details: ${{ steps.release.outputs}}"
+          echo '${{ toJson(steps.release.outputs) }}'
