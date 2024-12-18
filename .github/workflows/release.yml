@@ -34,6 +34,6 @@ jobs:
         uses: sergeysova/jq-action@v2
         id: version
         with:
-          cmd: "echo '${{ steps.release.outputs.pr }}' | jq .title -r"
+          cmd: "echo '${{ steps.release.outputs.pr }}' | jq .title -r | awk -F'release ' '{print $2}'"
       - name: Show my version
         run: 'echo "version is ${{ steps.version.outputs.value }}"'
