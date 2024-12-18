@@ -34,3 +34,5 @@ jobs:
           cmd: "gh pr list --json number | jq -r '.[].number'"
       - name: Merge release PR
         run: "gh pr merge ${{ steps.release-pr.outputs.value }} --merge --delete-branch"
+        env:
+          GH_TOKEN: ${{ github.token }}
