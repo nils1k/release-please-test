@@ -36,11 +36,11 @@ jobs:
       - name: Store release PR number
         id: release-pr
         run: |
-            echo "::set-output name=number::$(gh pr list --label='autorelease: pending' --json number | grep -o '\"number\":[0-9]*' | grep -o '[0-9]*')"
+            echo "number=$(gh pr list --label='autorelease: pending' --json number | grep -o '\"number\":[0-9]*' | grep -o '[0-9]*')" >> $GITHUB_OUTPUT
         env:
           GH_TOKEN: ${{ github.token }}
 
       - name: Merge release PR
-        run: "gh pr merge ${{ steps.release-pr.outputs.number }} --merge --delete-branch"
+        run: "gh pr merge ${{ steps.release-pr.outputs.number }} --squash"
         env:
           GH_TOKEN: ${{ github.token }}
