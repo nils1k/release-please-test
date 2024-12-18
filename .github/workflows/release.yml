@@ -34,11 +34,13 @@ jobs:
         run: 'echo "version is ${{ steps.version.outputs.value }}"'
 
       - name: Store release PR number
-        run: "gh pr list --label='autorelease: pending' --json number | grep -o '\"number\":[0-9]*' | grep -o '[0-9]*'"
+        id: release-pr
+        run: |
+            echo "::set-output name=number::$(gh pr list --label='autorelease: pending' --json number | grep -o '\"number\":[0-9]*' | grep -o '[0-9]*')"
         env:
           GH_TOKEN: ${{ github.token }}
 
       - name: Merge release PR
-        run: "gh pr merge ${{ steps.release-pr.outputs.value }} --merge --delete-branch"
+        run: "gh pr merge ${{ steps.release-pr.outputs.number }} --merge --delete-branch"
         env:
           GH_TOKEN: ${{ github.token }}
