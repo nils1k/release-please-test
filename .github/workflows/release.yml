@@ -31,7 +31,9 @@ jobs:
         uses: sergeysova/jq-action@v2
         id: release-pr
         with:
-          cmd: "gh pr list --json number | jq -r '.[].number'"
+          cmd: "echo $(gh pr list --json number) | jq -r '.[].number'"
+        env:
+          GH_TOKEN: ${{ github.token }}
       - name: Merge release PR
         run: "gh pr merge ${{ steps.release-pr.outputs.value }} --merge --delete-branch"
         env:
