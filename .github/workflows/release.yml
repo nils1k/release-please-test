@@ -20,16 +20,6 @@ jobs:
         id: release
         with:
           release-type: simple
-      # Output the calculated version
-      - name: Print calculated version
-        if: ${{steps.release.outputs.releases_created}}
-        run: |
-          echo "Next version: ${{ steps.release.outputs.major}}.${{ steps.release.outputs.minor}}.${{ steps.release.outputs.patch}}"
-      - name: Print JSON Payload
-        continue-on-error: true
-        if: ${{steps.release.outputs.releases_created}}
-        run: |
-          echo '${{ toJson(steps.release.outputs) }}'
       - name: Extract version from package.json
         uses: sergeysova/jq-action@v2
         id: version
@@ -37,3 +27,10 @@ jobs:
           cmd: "echo '${{ steps.release.outputs.pr }}' | jq .title -r | awk -F'release ' '{print $2}'"
       - name: Show my version
         run: 'echo "version is ${{ steps.version.outputs.value }}"'
+      - name: Get release PR number
+        uses: sergeysova/jq-action@v2
+        id: release-pr
+        with:
+          cmd: "gh pr list --json number | jq -r '.[].number'"
+      - name: Merge release PR
+        run: "gh pr merge ${{ steps.release-pr.outputs.value }} --merge --delete-branch"
