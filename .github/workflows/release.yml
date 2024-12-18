@@ -27,13 +27,17 @@ jobs:
           cmd: "echo '${{ steps.release.outputs.pr }}' | jq .title -r | awk -F'release ' '{print $2}'"
       - name: Show my version
         run: 'echo "version is ${{ steps.version.outputs.value }}"'
+      - name: Store release PR number
+        run: echo "RELEASE_PR_NUMBER=$(gh pr list --json number)" >> $GITHUB_ENV
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - name: Show my version
+        run: 'echo "PR number is ${{ env.RELEASE_PR_NUMBER }}"'
       - name: Get release PR number
         uses: sergeysova/jq-action@v2
         id: release-pr
         with:
-          cmd: "echo $(gh pr list --json number) | jq -r '.[].number'"
-        env:
-          GH_TOKEN: ${{ github.token }}
+          cmd: "echo ${{ env.RELEASE_PR_NUMBER }} | jq -r '.[].number'"
       - name: Merge release PR
         run: "gh pr merge ${{ steps.release-pr.outputs.value }} --merge --delete-branch"
         env:
